@@ -6,36 +6,36 @@ namespace VirtualBoxDiskCreator
 {
     class MsgBox : Form
     {
-        public enum ThemeMode : byte { Dark, Light }
+        public enum ThemeMode : byte
+        {
+            Dark,
+            Light
+        }
         private readonly Timer _timer;
         private readonly StringFormat _stringFormat;
         private readonly SolidBrush _fontBrush;
         private Font _font;
         private int _duration;
-        public string Message { get; set; }
-        private ThemeMode _theme;
+        private string _message;
+        private ThemeMode _currentTheme;
         public ThemeMode Theme
         {
             get
             {
-                return _theme;
+                return _currentTheme;
             }
             set
             {
-                if (_theme != value)
+                _currentTheme = value;
+                if (_currentTheme == ThemeMode.Dark)
                 {
-                    _theme = value;
-                    if (_theme == ThemeMode.Dark)
-                    {
-                        BackColor = Color.FromArgb(30, 30, 30);
-                        _fontBrush.Color = Color.White;
-                    }
-                    else
-                    {
-                        BackColor = Color.White;
-                        _fontBrush.Color = Color.Black;
-                    }
-                    Invalidate();
+                    BackColor = Color.FromArgb(30, 30, 30);
+                    _fontBrush.Color = Color.White;
+                }
+                else
+                {
+                    BackColor = Color.White;
+                    _fontBrush.Color = Color.Black;
                 }
             }
         }
@@ -63,8 +63,19 @@ namespace VirtualBoxDiskCreator
                 if (_font != value)
                 {
                     _font = value;
-                    Invalidate();
                 }
+            }
+        }
+
+        public new string Text
+        {
+            get
+            {
+                return _message;
+            }
+            set
+            {
+                _message = value;
             }
         }
 
@@ -95,8 +106,8 @@ namespace VirtualBoxDiskCreator
             Opacity = 0;
             ShowIcon = false;
             ShowInTaskbar = false;
-            Message = text;
-            Duration = duration > 0 ? duration : 1;
+            Text = text;
+            Duration = duration;
             _timer = new Timer();
             _timer.Tick += new EventHandler(Tick);
             _timer.Interval = 1;
@@ -149,7 +160,7 @@ namespace VirtualBoxDiskCreator
         {
             base.OnPaint(e);
             Rectangle rect = new Rectangle(new Point(), Size);
-            e.Graphics.DrawString(Message, _font, _fontBrush, rect, _stringFormat);
+            e.Graphics.DrawString(Text, _font, _fontBrush, rect, _stringFormat);
             if (!Owner.Focused) Owner.Focus();
         }
 
