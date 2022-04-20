@@ -100,6 +100,7 @@ namespace VirtualBoxDiskCreator
             _timer = new Timer();
             _timer.Tick += new EventHandler(Tick);
             _timer.Interval = 1;
+            SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
         }
 
         public MsgBox(string text, int duration, ThemeMode theme) : this(text, duration)
