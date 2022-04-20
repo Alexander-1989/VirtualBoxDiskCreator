@@ -14,9 +14,9 @@ namespace VirtualBoxDiskCreator
         private readonly Timer _timer;
         private readonly StringFormat _stringFormat;
         private readonly SolidBrush _fontBrush;
-        private Font _font;
         private int _duration;
-        private string _message;
+        public new Font Font { get; set; }
+        public new string Text { get; set; }
         private ThemeMode _currentTheme;
         public ThemeMode Theme
         {
@@ -52,40 +52,13 @@ namespace VirtualBoxDiskCreator
             }
         }
 
-        public new Font Font
-        {
-            get
-            {
-                return _font;
-            }
-            set
-            {
-                if (_font != value)
-                {
-                    _font = value;
-                }
-            }
-        }
-
-        public new string Text
-        {
-            get
-            {
-                return _message;
-            }
-            set
-            {
-                _message = value;
-            }
-        }
-
         public MsgBox() : this("") { }
 
         public MsgBox(string text) : this(text, 80) { }
 
         public MsgBox(string text, int duration)
         {
-            _font = new Font
+            Font = new Font
                 (
                 base.Font.FontFamily,
                 12,
@@ -160,7 +133,7 @@ namespace VirtualBoxDiskCreator
         {
             base.OnPaint(e);
             Rectangle rect = new Rectangle(new Point(), Size);
-            e.Graphics.DrawString(Text, _font, _fontBrush, rect, _stringFormat);
+            e.Graphics.DrawString(Text, Font, _fontBrush, rect, _stringFormat);
             if (!Owner.Focused) Owner.Focus();
         }
 
@@ -183,9 +156,9 @@ namespace VirtualBoxDiskCreator
         public new void Dispose()
         {
             _stringFormat.Dispose();
-            _font.Dispose();
             _fontBrush.Dispose();
             _timer.Dispose();
+            Font.Dispose();
             base.Dispose();
         }
     }
