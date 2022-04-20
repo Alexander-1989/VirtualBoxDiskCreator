@@ -11,9 +11,9 @@ namespace VirtualBoxDiskCreator
         private readonly StringFormat _stringFormat;
         private readonly SolidBrush _fontBrush;
         private Font _font;
-        private ThemeMode _theme;
-        public int Duration { get; set; }
+        private int _duration;
         public string Message { get; set; }
+        private ThemeMode _theme;
         public ThemeMode Theme
         {
             get
@@ -40,9 +40,24 @@ namespace VirtualBoxDiskCreator
             }
         }
 
+        public int Duration
+        {
+            get
+            {
+                return _duration;
+            }
+            set
+            {
+                _duration = value > 0 ? value : 0;
+            }
+        }
+
         public new Font Font
         {
-            get => _font;
+            get
+            {
+                return _font;
+            }
             set
             {
                 if (_font != value)
@@ -81,7 +96,7 @@ namespace VirtualBoxDiskCreator
             ShowIcon = false;
             ShowInTaskbar = false;
             Message = text;
-            Duration = duration;
+            Duration = duration > 0 ? duration : 1;
             _timer = new Timer();
             _timer.Tick += new EventHandler(Tick);
             _timer.Interval = 1;
@@ -94,15 +109,15 @@ namespace VirtualBoxDiskCreator
 
         private void Tick(object sender, EventArgs e)
         {
-            if (Duration > 0 && Opacity < 1)
+            if (_duration > -1 && Opacity < 1)
             {
                 Opacity += 0.1;
             }
             else
             {
-                if (Duration > 0)
+                if (_duration > -1)
                 {
-                    Duration--;
+                    _duration--;
                 }
                 else if (Opacity > 0)
                 {
