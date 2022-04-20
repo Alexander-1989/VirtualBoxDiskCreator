@@ -6,13 +6,52 @@ namespace VirtualBoxDiskCreator
 {
     class MsgBox : Form
     {
+        public enum ThemeMode : byte { Dark, Light }
         private readonly Timer _timer;
-        private readonly Font _font;
-        private readonly Brush _brush;
         private readonly StringFormat _stringFormat;
+        private readonly SolidBrush _fontBrush;
+        private Font _font;
+        private ThemeMode _theme;
         public int Duration { get; set; }
-        public int CharSize { get; set; } = 12;
         public string Message { get; set; }
+        public ThemeMode Theme
+        {
+            get
+            {
+                return _theme;
+            }
+            set
+            {
+                if (_theme != value)
+                {
+                    _theme = value;
+                    if (_theme == ThemeMode.Dark)
+                    {
+                        BackColor = Color.FromArgb(30, 30, 30);
+                        _fontBrush.Color = Color.White;
+                    }
+                    else
+                    {
+                        BackColor = Color.White;
+                        _fontBrush.Color = Color.Black;
+                    }
+                    Invalidate();
+                }
+            }
+        }
+
+        public new Font Font
+        {
+            get => _font;
+            set
+            {
+                if (_font != value)
+                {
+                    _font = value;
+                    Invalidate();
+                }
+            }
+        }
 
         public MsgBox() : this("") { }
 
@@ -22,21 +61,21 @@ namespace VirtualBoxDiskCreator
         {
             _font = new Font
                 (
-                Font.FontFamily,
-                CharSize,
-                Font.Style,
-                Font.Unit,
-                Font.GdiCharSet,
-                Font.GdiVerticalFont
+                base.Font.FontFamily,
+                12,
+                base.Font.Style,
+                base.Font.Unit,
+                base.Font.GdiCharSet,
+                base.Font.GdiVerticalFont
                 );
             _stringFormat = new StringFormat()
             {
                 Alignment = StringAlignment.Center,
                 LineAlignment = StringAlignment.Center
             };
-            _brush = new SolidBrush(Color.White);
-            StartPosition = FormStartPosition.Manual;
+            _fontBrush = new SolidBrush(Color.White);
             BackColor = Color.FromArgb(30, 30, 30);
+            StartPosition = FormStartPosition.Manual;
             FormBorderStyle = FormBorderStyle.None;
             Opacity = 0;
             ShowIcon = false;
@@ -46,6 +85,11 @@ namespace VirtualBoxDiskCreator
             _timer = new Timer();
             _timer.Tick += new EventHandler(Tick);
             _timer.Interval = 1;
+        }
+
+        public MsgBox(string text, int duration, ThemeMode theme) : this(text, duration)
+        {
+            Theme = theme;
         }
 
         private void Tick(object sender, EventArgs e)
@@ -89,7 +133,7 @@ namespace VirtualBoxDiskCreator
         {
             base.OnPaint(e);
             Rectangle rect = new Rectangle(new Point(), Size);
-            e.Graphics.DrawString(Message, _font, _brush, rect, _stringFormat);
+            e.Graphics.DrawString(Message, _font, _fontBrush, rect, _stringFormat);
             if (!Owner.Focused) Owner.Focus();
         }
 
@@ -113,7 +157,7 @@ namespace VirtualBoxDiskCreator
         {
             _stringFormat.Dispose();
             _font.Dispose();
-            _brush.Dispose();
+            _fontBrush.Dispose();
             _timer.Dispose();
             base.Dispose();
         }
