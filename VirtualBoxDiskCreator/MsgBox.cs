@@ -11,13 +11,15 @@ namespace VirtualBoxDiskCreator
             Dark,
             Light
         }
+
         private readonly Timer _timer;
         private readonly StringFormat _stringFormat;
         private readonly SolidBrush _fontBrush;
-        private int _duration;
-        public new Font Font { get; set; }
-        public new string Text { get; set; }
         private ThemeMode _currentTheme;
+        private Font _font;
+        private string _text;
+        private int _duration;
+        
         public ThemeMode Theme
         {
             get
@@ -37,6 +39,33 @@ namespace VirtualBoxDiskCreator
                     BackColor = Color.White;
                     _fontBrush.Color = Color.Black;
                 }
+                Invalidate();
+            }
+        }
+
+        public new Font Font
+        {
+            get
+            {
+                return _font;
+            }
+            set
+            {
+                _font = value;
+                Invalidate();
+            }
+        }
+
+        public new string Text
+        {
+            get
+            {
+                return _text;
+            }
+            set
+            {
+                _text = value;
+                Invalidate();
             }
         }
 
@@ -56,9 +85,14 @@ namespace VirtualBoxDiskCreator
 
         public MsgBox(string text) : this(text, 80) { }
 
+        public MsgBox(string text, int duration, ThemeMode theme) : this(text, duration)
+        {
+            Theme = theme;
+        }
+
         public MsgBox(string text, int duration)
         {
-            Font = new Font
+            _font = new Font
                 (
                 base.Font.FontFamily,
                 12,
@@ -74,22 +108,17 @@ namespace VirtualBoxDiskCreator
             };
             _fontBrush = new SolidBrush(Color.White);
             BackColor = Color.FromArgb(30, 30, 30);
-            StartPosition = FormStartPosition.Manual;
             FormBorderStyle = FormBorderStyle.None;
+            StartPosition = FormStartPosition.Manual;
             Opacity = 0;
             ShowIcon = false;
             ShowInTaskbar = false;
-            Text = text;
             Duration = duration;
+            _text = text;
             _timer = new Timer();
             _timer.Tick += new EventHandler(Tick);
             _timer.Interval = 1;
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
-        }
-
-        public MsgBox(string text, int duration, ThemeMode theme) : this(text, duration)
-        {
-            Theme = theme;
         }
 
         private void Tick(object sender, EventArgs e)
@@ -133,7 +162,7 @@ namespace VirtualBoxDiskCreator
         {
             base.OnPaint(e);
             Rectangle rect = new Rectangle(new Point(), Size);
-            e.Graphics.DrawString(Text, Font, _fontBrush, rect, _stringFormat);
+            e.Graphics.DrawString(_text, _font, _fontBrush, rect, _stringFormat);
             if (!Owner.Focused) Owner.Focus();
         }
 
@@ -158,7 +187,7 @@ namespace VirtualBoxDiskCreator
             _stringFormat.Dispose();
             _fontBrush.Dispose();
             _timer.Dispose();
-            Font.Dispose();
+            _font.Dispose();
             base.Dispose();
         }
     }
