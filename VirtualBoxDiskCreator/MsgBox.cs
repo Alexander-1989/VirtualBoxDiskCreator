@@ -1,8 +1,6 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
+﻿using System.Drawing;
 
-namespace VirtualBoxDiskCreator
+namespace System.Windows.Forms
 {
     class MsgBox : Form
     {
@@ -12,6 +10,10 @@ namespace VirtualBoxDiskCreator
             Light
         }
 
+        const int MaxHeight = 60;
+        const int MinWidth = 200;
+        const int MaxWidth = 500;
+
         private readonly Timer _timer;
         private readonly StringFormat _stringFormat;
         private readonly SolidBrush _fontBrush;
@@ -19,7 +21,7 @@ namespace VirtualBoxDiskCreator
         private Font _font;
         private string _text;
         private int _duration;
-        
+
         public ThemeMode Theme
         {
             get
@@ -114,6 +116,7 @@ namespace VirtualBoxDiskCreator
             ShowIcon = false;
             ShowInTaskbar = false;
             Duration = duration;
+            Height = MaxHeight;
             _text = text;
             _timer = new Timer();
             _timer.Tick += new EventHandler(Tick);
@@ -153,8 +156,10 @@ namespace VirtualBoxDiskCreator
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            Location = new Point(Owner.Location.X + 6, Owner.Location.Y + Owner.Height - 66);
-            Size = new Size(Owner.Width - 12, 60);
+            if (Owner.Width > MaxWidth) Width = MaxWidth;
+            else Width = Owner.Width < MinWidth ? MinWidth : Owner.Width - 12;
+            Location = new Point(Owner.Location.X + (Owner.Width - Width) / 2,
+                Owner.Location.Y + Owner.Height - Height - 6);
             _timer.Start();
         }
 
