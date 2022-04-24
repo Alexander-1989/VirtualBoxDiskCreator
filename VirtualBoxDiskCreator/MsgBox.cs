@@ -10,9 +10,9 @@ namespace System.Windows.Forms
             Light
         }
 
-        const int MaxHeight = 60;
-        const int MinWidth = 200;
-        const int MaxWidth = 500;
+        private const int MaxHeight = 60;
+        private const int MinWidth = 200;
+        private const int MaxWidth = 500;
 
         private readonly Timer _timer;
         private readonly StringFormat _stringFormat;
