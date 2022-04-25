@@ -37,7 +37,7 @@
             }
             else
             {
-                return null;
+                return string.Empty;
             }
         }
     }
