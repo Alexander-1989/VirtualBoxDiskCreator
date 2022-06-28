@@ -17,6 +17,12 @@ namespace VirtualBoxDiskCreator
 
         private readonly string fullPath = Service.GetVirtualBoxDirectory();
 
+        private void ShowMessage(string message)
+        {
+            MsgBox messageDialog = new MsgBox(message);
+            messageDialog.Show(this);
+        }
+
         private void InitializeDiskInfo()
         {
             comboBox1.Items.Clear();
@@ -32,11 +38,11 @@ namespace VirtualBoxDiskCreator
         {
             if (fullPath == string.Empty)
             {
-                MsgBox message = new MsgBox("VirtualBox is not installed.");
-                message.Show(this);
+                ShowMessage("VirtualBox is not installed.");
                 return;
             }
 
+            string message = null;
             DiskDrive drive = comboBox1.SelectedItem as DiskDrive;
             saveFileDialog1.FileName = drive.Model.Replace(' ', '_');
 
@@ -60,19 +66,20 @@ namespace VirtualBoxDiskCreator
 
                     if (File.Exists(fileName))
                     {
-                        MsgBox message = new MsgBox($"VMDK \"{drive.Model}\" has been created!");
-                        message.Show(this);
+                        message = $"VMDK \"{drive.Model}\" has been created!";
                     }
                     else
                     {
-                        MsgBox message = new MsgBox("Something went wrong!");
-                        message.Show(this);
+                        message = "Something wrong!";
                     }
                 }
                 catch (Exception exc)
                 {
-                    MsgBox message = new MsgBox(exc.Message);
-                    message.Show(this);
+                    message = exc.Message;
+                }
+                finally
+                {
+                    ShowMessage(message);
                 }
             }
         }
