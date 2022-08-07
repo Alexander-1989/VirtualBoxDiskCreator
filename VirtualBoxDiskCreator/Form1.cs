@@ -36,7 +36,7 @@ namespace VirtualBoxDiskCreator
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (fullPath == string.Empty)
+            if (string.IsNullOrEmpty(fullPath))
             {
                 ShowMessage("VirtualBox is not installed.");
                 return;

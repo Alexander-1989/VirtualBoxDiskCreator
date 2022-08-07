@@ -15,8 +15,8 @@ namespace System.Windows.Forms
         private const int MaxWidth = 500;
 
         private readonly Timer _timer;
-        private readonly StringFormat _stringFormat;
         private readonly SolidBrush _fontBrush;
+        private readonly StringFormat _stringFormat;
         private ThemeMode _currentTheme;
         private Font _font;
         private string _text;
