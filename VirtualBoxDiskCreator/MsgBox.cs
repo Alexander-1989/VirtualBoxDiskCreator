@@ -166,7 +166,7 @@ namespace System.Windows.Forms
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            Rectangle rect = new Rectangle(new Point(), Size);
+            Rectangle rect = new Rectangle(new Point(0, 0), Size);
             e.Graphics.DrawString(_text, _font, _fontBrush, rect, _stringFormat);
             if (!Owner.Focused) Owner.Focus();
         }

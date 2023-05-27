@@ -34,7 +34,7 @@ namespace VirtualBoxDiskCreator
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(fullPath))
             {
@@ -84,12 +84,12 @@ namespace VirtualBoxDiskCreator
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             InitializeDiskInfo();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
